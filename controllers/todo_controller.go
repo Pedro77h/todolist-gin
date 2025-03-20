@@ -3,6 +3,7 @@ package controllers
 import (
 	"crud/controllers/dtos"
 	"crud/handles"
+	"crud/model"
 	"crud/services"
 	"net/http"
 
@@ -73,4 +74,50 @@ func (tc *TodoController) GetTodoById(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, todo)
+}
+
+func (tc *TodoController) BeDone(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	if id == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": "Bad Request",
+		})
+		return
+	}
+
+	err := tc.todoService.BeDone(id)
+
+	err = handles.TodoErrorHandler(ctx, err, &model.Todo{})
+
+	if err != nil {
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": "Todo marked as done",
+	})
+}
+
+func (tc *TodoController) RemoveTodo(ctx *gin.Context) {
+	id := ctx.Param("id")
+
+	if id == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"error": "Bad Request",
+		})
+		return
+	}
+
+	err := tc.todoService.RemoveTodo(id)
+
+	err = handles.TodoErrorHandler(ctx, err, &model.Todo{})
+
+	if err != nil {
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"success": "Todo removed succesfully",
+	})
 }

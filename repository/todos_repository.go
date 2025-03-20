@@ -95,3 +95,46 @@ func (tr *TodoRepository) GetById(id int) (todo *model.Todo, err error) {
 
 	return todo, err
 }
+
+func (tr *TodoRepository) BeDone(id int) (err error) {
+	query, err := tr.connection.Prepare("UPDATE todos SET done = TRUE WHERE id = $1 RETURNING id")
+
+	if err != nil {
+		return err
+	}
+
+	err = query.QueryRow(id).Scan(&id)
+
+	if err != nil {
+		fmt.Printf("TodoRepository - BeDone - not found todo with id %d \n", id)
+		return err
+	}
+
+	query.Close()
+
+	fmt.Printf("TodoRepository - BeDone - successfully marked a to-do with %d as done \n", id)
+
+	return nil
+}
+
+func (tr *TodoRepository) RemoveTodo(id int) (err error) {
+	query, err := tr.connection.Prepare("DELETE FROM todos WHERE id = $1;")
+
+	if err != nil {
+		return err
+	}
+
+	_, err = query.Exec(id)
+
+	if err != nil {
+		panic(err)
+		fmt.Printf("TodoRepository - RemoveTodo - not found todo with id %d \n", id)
+		return err
+	}
+
+	query.Close()
+
+	fmt.Printf("TodoRepository - BeDone - successfully delete to-do with id %d \n", id)
+
+	return nil
+}

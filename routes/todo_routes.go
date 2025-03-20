@@ -18,4 +18,6 @@ func InitTodoRoutes(connection *sql.DB, route *gin.Engine) {
 	groupRoute.GET("", todoController.GetAllTodos)
 	groupRoute.POST("", todoController.CreateTodo)
 	groupRoute.GET(":id", todoController.GetTodoById)
+	groupRoute.PATCH(":id", todoController.BeDone)
+	groupRoute.DELETE(":id", todoController.RemoveTodo)
 }

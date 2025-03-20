@@ -53,3 +53,41 @@ func (ts *TodoService) GetById(id string) (todo *model.Todo, err error) {
 
 	return todo, err
 }
+
+func (ts *TodoService) BeDone(id string) (err error) {
+	fmt.Println("TodoService - BeDone - Marking a to-do as done")
+
+	parsedId, err := strconv.Atoi(id)
+
+	if err != nil {
+		fmt.Printf("TodoService - GetById - failed to parse id %s \n", id)
+		return err
+	}
+
+	err = ts.todoRepository.BeDone(parsedId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (ts *TodoService) RemoveTodo(id string) (err error) {
+	fmt.Println("TodoService - RemoveTodo - removing todo")
+
+	parsedId, err := strconv.Atoi(id)
+
+	if err != nil {
+		fmt.Printf("TodoService - GetById - failed to parse id %s \n", id)
+		return err
+	}
+
+	err = ts.todoRepository.RemoveTodo(parsedId)
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
