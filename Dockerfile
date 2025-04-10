@@ -14,5 +14,6 @@ COPY --from=root-certs /etc/passwd /etc/passwd
 COPY --from=root-certs /etc/group /etc/group
 COPY --chown=1001:1001 --from=root-certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --chown=1001:1001 --from=builder /crud/crud /crud
+COPY --chown=1001:1001 --from=builder /crud/.env .env
 USER app
 ENTRYPOINT ["/crud"]
